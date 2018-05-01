@@ -2,19 +2,30 @@ package com.iaunt.monkey;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.iaunt.monkey.actors.MonkeyActor;
 
 public class MainGameScreen extends BaseScreen {
 
     private Stage stage;
 
+    private MonkeyActor monkeyActor;
+    private Texture monkeyTexture;
+
+
     public MainGameScreen(MonkeyBoxBanana game) {
         super(game);
+        monkeyTexture = new Texture("monkey.png");
     }
 
     @Override
     public void show() {
         stage = new Stage();
+
+        monkeyActor = new MonkeyActor(monkeyTexture);
+        stage.addActor(monkeyActor);
+        monkeyActor.setPosition(20, 100);
     }
 
     @Override
@@ -33,5 +44,8 @@ public class MainGameScreen extends BaseScreen {
         stage.draw(); // dibuja
     }
 
-
+    @Override
+    public void dispose() {
+        monkeyTexture.dispose();
+    }
 }
