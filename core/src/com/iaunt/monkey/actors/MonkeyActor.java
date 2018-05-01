@@ -1,15 +1,15 @@
 package com.iaunt.monkey.actors;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class MonkeyActor extends Actor{
 
-    private Texture monkeyTexture;
+    private TextureRegion monkeyTexture;
 
-    public MonkeyActor(Texture monkeyTexture) {
-            this.monkeyTexture = monkeyTexture;
+    public MonkeyActor(TextureRegion monkeyTexture) {
+        this.monkeyTexture = monkeyTexture;
     }
 
     @Override
