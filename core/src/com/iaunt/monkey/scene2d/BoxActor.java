@@ -1,4 +1,4 @@
-package com.iaunt.monkey.actors;
+package com.iaunt.monkey.scene2d;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,6 +10,7 @@ public class BoxActor extends Actor {
 
     public BoxActor(Texture boxTexture){
         this.boxTexture = boxTexture;
+        setSize(boxTexture.getWidth(), boxTexture.getHeight());
     }
 
     @Override
