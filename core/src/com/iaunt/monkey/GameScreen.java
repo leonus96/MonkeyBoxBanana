@@ -27,7 +27,7 @@ public class GameScreen extends BaseScreen {
         world = new World(new Vector2(0, -10), true);
 
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
-        monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey.png"), new Vector2(1, 2));
+        monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(1, 2));
         box = new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(2, 2));
 
     }
