@@ -33,6 +33,7 @@ public class BoxEntity extends Actor {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(0.25f, 0.25f);
         fixture = body.createFixture(shape, 1);
+        fixture.setUserData("box");
         shape.dispose();
 
         setSize(PIXELS_IN_METERS * 0.5f, PIXELS_IN_METERS * 0.5f);

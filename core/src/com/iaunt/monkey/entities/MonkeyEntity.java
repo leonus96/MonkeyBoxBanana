@@ -60,11 +60,13 @@ public class MonkeyEntity extends Actor {
         def.position.set(position);
         def.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(def);
+        body.setFixedRotation(true);
 
         // creation of fixture:
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(0.25f, 0.5f);
         fixture = body.createFixture(shape, 1);
+        fixture.setUserData("monkey");
         shape.dispose();
 
         setSize(PIXELS_IN_METERS * 0.5f, PIXELS_IN_METERS * 1f);
@@ -90,10 +92,10 @@ public class MonkeyEntity extends Actor {
             // start standing:
             if(previousState != State.STANDING){
                 previousState = State.STANDING;
-                System.out.println("Dejé de caminar");
                 stateTimer = 0;
             }
-            body.setLinearVelocity(0, body.getLinearVelocity().y);
+            float vY = body.getLinearVelocity().y;
+            body.setLinearVelocity(0, vY);
             currentRegion = standRegion;
         }
         if(currentState == State.WALKING){
@@ -102,7 +104,8 @@ public class MonkeyEntity extends Actor {
                 previousState = State.WALKING;
                 stateTimer = 0;
             }
-            body.setLinearVelocity(PLAYER_SPEED, body.getLinearVelocity().y);
+            float vY = body.getLinearVelocity().y;
+            body.setLinearVelocity(PLAYER_SPEED, vY);
             currentRegion = walkAnimation.getKeyFrame(stateTimer, true);
         }
     }
@@ -114,9 +117,19 @@ public class MonkeyEntity extends Actor {
         batch.draw(currentRegion, getX(), getY(), getWidth(), getHeight());
     }
 
-    public void jump(){
-        if(jumping)
-            body.applyLinearImpulse(0 , IMPULSE_JUMP, 0, 0, true);
+    private void jump(){
+        if(!jumping) {
+            jumping = true;
+            body.applyLinearImpulse(0, IMPULSE_JUMP, body.getPosition().x, body.getPosition().y, true);
+        }
+    }
+
+    public void setJumping(boolean jumping) {
+        this.jumping = jumping;
+    }
+
+    public boolean isJumping() {
+        return jumping;
     }
 
     public void detach() {

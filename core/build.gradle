@@ -6,5 +6,5 @@ eclipse.project {
     name = appName + "-core"
 }
 dependencies {
-    compile project(':jpl')
+    compile files('libs/jpl.jar')
 }

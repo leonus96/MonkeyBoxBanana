@@ -41,6 +41,7 @@ public class FloorEntity extends Actor {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width/2, 0.5f);
         fixture = body.createFixture(shape, 1);
+        fixture.setUserData("floor");
         shape.dispose();
 
         setSize(PIXELS_IN_METERS * width, PIXELS_IN_METERS);
