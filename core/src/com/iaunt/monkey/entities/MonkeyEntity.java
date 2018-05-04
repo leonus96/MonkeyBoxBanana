@@ -30,9 +30,10 @@ public class MonkeyEntity extends Actor {
     private TextureRegion currentRegion;
     private float stateTimer;
 
-    private Animation<TextureRegion> walkAnimation;
+    private Animation<TextureRegion> walkAnimationRight;
+    private Animation<TextureRegion> walkAnimationLeft;
 
-    private enum State {STANDING, WALKING}
+    private enum State {STANDING, WALKING_RIGHT, WALKING_LEFT}
     private State currentState;
     private State previousState;
     private boolean jumping;
@@ -43,11 +44,17 @@ public class MonkeyEntity extends Actor {
 
         // creation of textureRegions:
         standRegion = new TextureRegion(texture, 0, 0, 16, 24);
-        Array<TextureRegion> walkingRegions = new Array<TextureRegion>();
-        for(int i = 2; i < 6; i++)
-            walkingRegions.add(new TextureRegion(texture, i*16, 0, 16, 24));
-        walkAnimation = new Animation<TextureRegion>(0.1f, walkingRegions);
-        walkingRegions.clear();
+        Array<TextureRegion> walkingRegionsRight = new Array<TextureRegion>();
+        Array<TextureRegion> walkingRegionsLeft = new Array<TextureRegion>();
+        for(int i = 2; i < 6; i++){
+            walkingRegionsRight.add(new TextureRegion(texture, i*16, 0, 16, 24));
+            walkingRegionsLeft.add(new TextureRegion(texture, i*16, 0, 16, 24));
+            walkingRegionsLeft.get(i-2).flip(true, false);
+        }
+        walkAnimationRight = new Animation<TextureRegion>(0.1f, walkingRegionsRight);
+        walkAnimationLeft = new Animation<TextureRegion>(0.1f, walkingRegionsLeft);
+        walkingRegionsRight.clear();
+        walkingRegionsLeft.clear();
 
         // set initial state:
         currentState = State.STANDING;
@@ -80,9 +87,11 @@ public class MonkeyEntity extends Actor {
             jump();
 
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            currentState = State.WALKING;
+            currentState = State.WALKING_RIGHT;
         }
-         else {
+         else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            currentState = State.WALKING_LEFT;
+        } else {
             currentState = State.STANDING;
         }
 
@@ -98,15 +107,25 @@ public class MonkeyEntity extends Actor {
             body.setLinearVelocity(0, vY);
             currentRegion = standRegion;
         }
-        if(currentState == State.WALKING){
+        if(currentState == State.WALKING_RIGHT){
             // start walking:
-            if(previousState != State.WALKING) {
-                previousState = State.WALKING;
+            if(previousState != State.WALKING_RIGHT) {
+                previousState = State.WALKING_RIGHT;
                 stateTimer = 0;
             }
             float vY = body.getLinearVelocity().y;
             body.setLinearVelocity(PLAYER_SPEED, vY);
-            currentRegion = walkAnimation.getKeyFrame(stateTimer, true);
+            currentRegion = walkAnimationRight.getKeyFrame(stateTimer, true);
+        }
+        if(currentState == State.WALKING_LEFT){
+            // start walking:
+            if(previousState != State.WALKING_LEFT) {
+                previousState = State.WALKING_LEFT;
+                stateTimer = 0;
+            }
+            float vY = body.getLinearVelocity().y;
+            body.setLinearVelocity(-PLAYER_SPEED, vY);
+            currentRegion = walkAnimationLeft.getKeyFrame(stateTimer, true);
         }
     }
 
@@ -114,6 +133,7 @@ public class MonkeyEntity extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         setPosition((body.getPosition().x - 0.25f) * PIXELS_IN_METERS,
                 (body.getPosition().y - 0.5f) * PIXELS_IN_METERS);
+
         batch.draw(currentRegion, getX(), getY(), getWidth(), getHeight());
     }
 
