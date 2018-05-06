@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.iaunt.monkey.entities.BananaEntity;
 import com.iaunt.monkey.entities.BoxEntity;
 import com.iaunt.monkey.entities.FloorEntity;
 import com.iaunt.monkey.entities.MonkeyEntity;
@@ -22,10 +23,10 @@ public class GameScreen extends BaseScreen {
 
     private Stage stage;
     private World world;
-
     private FloorEntity floor;
     private MonkeyEntity monkey;
     private BoxEntity box;
+    private BananaEntity banana;
 
     private Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
@@ -74,10 +75,12 @@ public class GameScreen extends BaseScreen {
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
         monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(1, 2));
         box = new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(2, 2));
+        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(3.5f, 4.5f));
 
         stage.addActor(floor);
         stage.addActor(monkey);
         stage.addActor(box);
+        stage.addActor(banana);
     }
 
     @Override
@@ -90,6 +93,9 @@ public class GameScreen extends BaseScreen {
 
         floor.detach();
         floor.remove();
+
+        banana.detach();
+        banana.remove();
     }
 
     @Override

@@ -14,6 +14,7 @@ public class MonkeyBoxBanana extends Game {
 		manager.load("monkey1.png", Texture.class);
 		manager.load("box.png", Texture.class);
 		manager.load("floor.png", Texture.class);
+		manager.load("banana.png", Texture.class);
 		manager.finishLoading();
 
 		setScreen(new GameScreen(this));
