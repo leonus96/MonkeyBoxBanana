@@ -26,7 +26,9 @@ public class BoxEntity extends Actor {
         // creation of body:
         BodyDef def = new BodyDef();
         def.position.set(position);
+        def.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(def);
+        body.setGravityScale(0);
 
         // creation  of fixture:
         PolygonShape shape = new PolygonShape();
@@ -49,5 +51,9 @@ public class BoxEntity extends Actor {
     public void detach() {
         body.destroyFixture(fixture);
         world.destroyBody(body);
+    }
+
+    public Body getBody() {
+        return body;
     }
 }

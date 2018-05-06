@@ -122,6 +122,12 @@ public class GameScreen extends BaseScreen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             monkey.walkLeft();
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            monkey.upBox(box1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            monkey.downBox(box1);
+        }
 
         stage.act();
 

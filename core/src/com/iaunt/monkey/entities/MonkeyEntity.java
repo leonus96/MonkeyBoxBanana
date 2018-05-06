@@ -41,6 +41,8 @@ public class MonkeyEntity extends Actor {
     private float newPosition;
     private boolean withBox;
 
+    private BoxEntity currentBox;
+
     public MonkeyEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
         this.texture = texture;
@@ -86,7 +88,6 @@ public class MonkeyEntity extends Actor {
     @Override
     public void act(float delta) {
         stateTimer += delta;
-        System.out.println(body.getPosition().y);
 
         /*if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
             jump();
@@ -99,8 +100,6 @@ public class MonkeyEntity extends Actor {
         } else {
             currentState = State.STANDING;
         }*/
-
-
 
         if(currentState == State.STANDING) {
             // start standing:
@@ -138,6 +137,13 @@ public class MonkeyEntity extends Actor {
             body.setLinearVelocity(-PLAYER_SPEED, vY);
             currentRegion = walkAnimationLeft.getKeyFrame(stateTimer, true);
         }
+
+        if(withBox){
+            currentBox.getBody().setTransform(body.getPosition().x,
+                    body.getPosition().y,
+                    currentBox.getBody().getAngle());
+        }
+
     }
 
     @Override
@@ -169,12 +175,14 @@ public class MonkeyEntity extends Actor {
         newPosition = body.getPosition().x - 1f;
     }
 
-    public void upBox() {
-
+    public void upBox(BoxEntity box) {
+        currentBox = box;
+        withBox = true;
     }
 
-    public void downBox() {
-
+    public void downBox(BoxEntity box) {
+        box.getBody().setTransform(box.getBody().getPosition().x, 1.5f, box.getBody().getAngle());
+        withBox = false;
     }
 
     public boolean isJumping() {
