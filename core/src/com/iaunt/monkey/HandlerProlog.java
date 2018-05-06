@@ -6,6 +6,7 @@ package com.iaunt.monkey;
 
 import org.jpl7.*;
 
+import java.lang.Integer;
 import java.lang.String;
 
 public class HandlerProlog {
@@ -16,6 +17,12 @@ public class HandlerProlog {
     private static String pc1 = "2";
     private static String pc2 = "12";
     private static String pb  = "8";
+
+    private static int xpm;
+    private static int xpc1;
+    private static int xpc2 ;
+    private static int xpb ;
+
 
     public static String getPm(){
         return pm;
@@ -53,21 +60,32 @@ public class HandlerProlog {
         String resp = "";
         switch(c){
             case 'a' :  resp = "Moverse Derecha";
+                        xpm++;
                 break;
             case 'b' :  resp = "Moverse Izquierda";
+                        xpm--;
                 break;
             case 'c' :  resp = "Levantar c1";
+
                 break;
             case 'd' :  resp = "Levantar c2";
                 break;
             case 'e' :  resp = "Transportar c1 Derecha";
+                        xpc1++;
+                        xpm++;
                 break;
             case 'f' :  resp = "Transportar c1 Izquierda";
+                        xpm--;
+                        xpc1--;
                 break;
             case 'g' :  resp = "Transportar c2 Derecha";
-                break;
+                        xpm++;
+                        xpc2++;
+                    break;
             case 'h' :  resp = "Transportar c2 Izquierda";
-                break;
+                        xpm--;
+                        xpc2--;
+                    break;
             case 'i' :  resp = "Soltar c1";
                 break;
             case 'j' :  resp = "Soltar c2";
@@ -103,6 +121,10 @@ public class HandlerProlog {
 
     public static Boolean startActions(){
         Boolean flag;
+        xpm = Integer.valueOf(pm);
+        xpc1 = Integer.valueOf(pc1);
+        xpc2 = Integer.valueOf(pc2);
+        xpb = Integer.valueOf(pb);
         String pl   = "consult('MonkeyBoxBanana.pl')";
         //String cons = "solucion(A,V)";
         String cons ="sgte(e("+pm+",0,"+pc1+","+pc2+","+pb+",3,3,3),[e(7,0,2,12,8,3,3,3)],V,[],A)";
@@ -122,7 +144,8 @@ public class HandlerProlog {
         startActions();
 
         for(int i=0;i<actions.length();i++){
-            System.out.println((i+1)+": "+translate(actions.charAt(i)));
+            System.out.println((i+1)+": "+translate(actions.charAt(i))+" - "+xpm+" "+xpc1+" "+xpc2);
+
         }
 
 
