@@ -38,6 +38,9 @@ public class MonkeyEntity extends Actor {
     private State previousState;
     private boolean jumping;
 
+    private float newPosition;
+    private boolean withBox;
+
     public MonkeyEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
         this.texture = texture;
@@ -61,6 +64,7 @@ public class MonkeyEntity extends Actor {
         previousState = State.STANDING;
         jumping = false;
         stateTimer = 0;
+        withBox = false;
 
         // creation of the body:
         BodyDef def = new BodyDef();
@@ -71,19 +75,20 @@ public class MonkeyEntity extends Actor {
 
         // creation of fixture:
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0.25f, 0.5f);
+        shape.setAsBox(0.5f, 1f);
         fixture = body.createFixture(shape, 1);
         fixture.setUserData("monkey");
         shape.dispose();
 
-        setSize(PIXELS_IN_METERS * 0.5f, PIXELS_IN_METERS * 1f);
+        setSize(PIXELS_IN_METERS * 1f, PIXELS_IN_METERS * 2f);
     }
 
     @Override
     public void act(float delta) {
         stateTimer += delta;
+        System.out.println(body.getPosition().y);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+        /*if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
             jump();
 
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
@@ -93,7 +98,7 @@ public class MonkeyEntity extends Actor {
             currentState = State.WALKING_LEFT;
         } else {
             currentState = State.STANDING;
-        }
+        }*/
 
 
 
@@ -113,6 +118,9 @@ public class MonkeyEntity extends Actor {
                 previousState = State.WALKING_RIGHT;
                 stateTimer = 0;
             }
+            if(body.getPosition().x >= newPosition){
+                currentState = State.STANDING;
+            }
             float vY = body.getLinearVelocity().y;
             body.setLinearVelocity(PLAYER_SPEED, vY);
             currentRegion = walkAnimationRight.getKeyFrame(stateTimer, true);
@@ -123,6 +131,9 @@ public class MonkeyEntity extends Actor {
                 previousState = State.WALKING_LEFT;
                 stateTimer = 0;
             }
+            if(body.getPosition().x <= newPosition){
+                currentState = State.STANDING;
+            }
             float vY = body.getLinearVelocity().y;
             body.setLinearVelocity(-PLAYER_SPEED, vY);
             currentRegion = walkAnimationLeft.getKeyFrame(stateTimer, true);
@@ -131,8 +142,8 @@ public class MonkeyEntity extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        setPosition((body.getPosition().x - 0.25f) * PIXELS_IN_METERS,
-                (body.getPosition().y - 0.5f) * PIXELS_IN_METERS);
+        setPosition((body.getPosition().x - 0.5f) * PIXELS_IN_METERS,
+                (body.getPosition().y - 1f) * PIXELS_IN_METERS);
 
         batch.draw(currentRegion, getX(), getY(), getWidth(), getHeight());
     }
@@ -146,6 +157,24 @@ public class MonkeyEntity extends Actor {
 
     public void setJumping(boolean jumping) {
         this.jumping = jumping;
+    }
+
+    public void walkRigth(){
+        currentState = State.WALKING_RIGHT;
+        newPosition = body.getPosition().x + 1f;
+    }
+
+    public void walkLeft(){
+        currentState = State.WALKING_LEFT;
+        newPosition = body.getPosition().x - 1f;
+    }
+
+    public void upBox() {
+
+    }
+
+    public void downBox() {
+
     }
 
     public boolean isJumping() {

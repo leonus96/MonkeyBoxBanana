@@ -26,23 +26,23 @@ public class BoxEntity extends Actor {
         // creation of body:
         BodyDef def = new BodyDef();
         def.position.set(position);
-        def.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(def);
 
         // creation  of fixture:
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0.25f, 0.25f);
+        shape.setAsBox(0.5f, 0.5f);
         fixture = body.createFixture(shape, 1);
         fixture.setUserData("box");
+        fixture.setSensor(true);
         shape.dispose();
 
-        setSize(PIXELS_IN_METERS * 0.5f, PIXELS_IN_METERS * 0.5f);
+        setSize(PIXELS_IN_METERS * 1f, PIXELS_IN_METERS * 1f);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        setPosition((body.getPosition().x - 0.25f) * PIXELS_IN_METERS,
-                (body.getPosition().y - 0.25f) * PIXELS_IN_METERS);
+        setPosition((body.getPosition().x - 0.5f) * PIXELS_IN_METERS,
+                (body.getPosition().y - 0.5f) * PIXELS_IN_METERS);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 

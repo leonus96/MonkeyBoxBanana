@@ -1,6 +1,7 @@
 package com.iaunt.monkey;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,7 +26,8 @@ public class GameScreen extends BaseScreen {
     private World world;
     private FloorEntity floor;
     private MonkeyEntity monkey;
-    private BoxEntity box;
+    private BoxEntity box1;
+    private BoxEntity box2;
     private BananaEntity banana;
 
     private Box2DDebugRenderer debugRenderer;
@@ -38,6 +40,7 @@ public class GameScreen extends BaseScreen {
 
         debugRenderer =  new Box2DDebugRenderer();
         camera = new OrthographicCamera(16, 9);
+        camera.translate(6,0);
 
         world.setContactListener(new ContactListener() {
             private boolean areCollided(Contact contact, Object userA, Object userB){
@@ -68,18 +71,25 @@ public class GameScreen extends BaseScreen {
             }
         });
 
+
+
+
+
     }
 
     @Override
     public void show() {
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
-        monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(1, 2));
-        box = new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(2, 2));
-        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(3.5f, 4.5f));
+        System.out.println(Gdx.graphics.getWidth() );
+        monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(6.5f, 2));
+        box1 = new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(1.5f, 1.5f));
+        box2 = new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(11.5f, 1.5f));
+        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(6.5f, 8));
 
         stage.addActor(floor);
         stage.addActor(monkey);
-        stage.addActor(box);
+        stage.addActor(box1);
+        stage.addActor(box2);
         stage.addActor(banana);
     }
 
@@ -88,8 +98,11 @@ public class GameScreen extends BaseScreen {
         monkey.detach();
         monkey.remove();
 
-        box.detach();
-        box.remove();
+        box1.detach();
+        box1.remove();
+
+        box2.detach();
+        box2.remove();
 
         floor.detach();
         floor.remove();
@@ -102,6 +115,13 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 170f/255f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+            monkey.walkRigth();
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+            monkey.walkLeft();
+        }
 
         stage.act();
 
