@@ -15,6 +15,7 @@ public class HandlerProlog {
     private static String pm  = "7";
     private static String pc1 = "2";
     private static String pc2 = "12";
+    private static String pb  = "8";
 
     public static String getPm(){
         return pm;
@@ -38,6 +39,13 @@ public class HandlerProlog {
         pc2 = pc2_;
     }
 
+    public static String getPb(){
+        return pb;
+    }
+    public static void setb(String pb_){
+        pb = pb_;
+    }
+
 
 
 
@@ -48,45 +56,29 @@ public class HandlerProlog {
                 break;
             case 'b' :  resp = "Moverse Izquierda";
                 break;
-            case 'c' :  resp = "Levantar c1 Derecha";
+            case 'c' :  resp = "Levantar c1";
                 break;
-            case 'd' :  resp = "Levantar c1 Izquierda";
+            case 'd' :  resp = "Levantar c2";
                 break;
-            case 'e' :  resp = "Levantar c2 Derecha";
+            case 'e' :  resp = "Transportar c1 Derecha";
                 break;
-            case 'f' :  resp = "Levantar c2 Izquierda";
+            case 'f' :  resp = "Transportar c1 Izquierda";
                 break;
-            case 'g' :  resp = "Transportar c1 Derecha";
+            case 'g' :  resp = "Transportar c2 Derecha";
                 break;
-            case 'h' :  resp = "Transportar c1 Izquierda";
+            case 'h' :  resp = "Transportar c2 Izquierda";
                 break;
-            case 'i' :  resp = "Transportar c2 Derecha";
+            case 'i' :  resp = "Soltar c1";
                 break;
-            case 'j' :  resp = "Transportar c2 Izquierda";
+            case 'j' :  resp = "Soltar c2";
                 break;
-            case 'k' :  resp = "Soltar c1 Derecha";
+            case 'k' :  resp = "Apilar c1 sobre c2";
                 break;
-            case 'l' :  resp = "Soltar c1 Izquierda";
+            case 'l' :  resp = "Apilar c2 sobre c1";
                 break;
-            case 'm' :  resp = "Soltar c2 Derecha";
+            case 'm' :  resp = "Escalar c1";
                 break;
-            case 'n' :  resp = "Soltar c2 Izquierda";
-                break;
-            case 'o' :  resp = "Apilar c1 sobre c2 Derecha";
-                break;
-            case 'p' :  resp = "Apilar c1 sobre c2 Izquierda";
-                break;
-            case 'q' :  resp = "Apilar c2 sobre c1 Derecha";
-                break;
-            case 'r' :  resp = "Apilar c2 sobre c1 Izquierda";
-                break;
-            case 's' :  resp = "Escalar c1 por la Derecha";
-                break;
-            case 't' :  resp = "Escalar c1 por la Izquierda";
-                break;
-            case 'u' :  resp = "Escalar c2 por la Derecha";
-                break;
-            case 'v' :  resp = "Escalar c2 por la Izquierda";
+            case 'n' :  resp = "Escalar c2";
                 break;
             default  :  resp = String.valueOf(c) + "Traduccion No Encontrada";
                 break;
@@ -100,7 +92,7 @@ public class HandlerProlog {
         String temp="";
         flag =(actions.length()>0) ? true : false;
         for(int i=0;i<actions.length();i++){
-            if(actions.charAt(i) >=97 && actions.charAt(i)<=118)
+            if(actions.charAt(i) >=97 && actions.charAt(i)<=110)
             {
                 temp = actions.charAt(i) + temp;
             }
@@ -112,8 +104,8 @@ public class HandlerProlog {
     public static Boolean startActions(){
         Boolean flag;
         String pl   = "consult('MonkeyBoxBanana.pl')";
-        //String cons = "solucion(A,V)";
-        String cons ="sgte(e("+pm+",0,"+pc1+","+pc2+",8,3,3,3),[e(7,0,2,12,8,3,3,3)],V,[],A)";
+        String cons = "solucion(A,V)";
+       // String cons ="sgte(e("+pm+",0,"+pc1+","+pc2+","+pb+",3,3,3),[e(7,0,2,12,8,3,3,3)],V,[],A)";
         Query q     = new Query(pl);
         flag = q.hasSolution() ? true : false ;
         if(flag){
