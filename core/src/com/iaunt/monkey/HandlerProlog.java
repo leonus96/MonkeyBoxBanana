@@ -104,8 +104,8 @@ public class HandlerProlog {
     public static Boolean startActions(){
         Boolean flag;
         String pl   = "consult('MonkeyBoxBanana.pl')";
-        String cons = "solucion(A,V)";
-       // String cons ="sgte(e("+pm+",0,"+pc1+","+pc2+","+pb+",3,3,3),[e(7,0,2,12,8,3,3,3)],V,[],A)";
+        //String cons = "solucion(A,V)";
+        String cons ="sgte(e("+pm+",0,"+pc1+","+pc2+","+pb+",3,3,3),[e(7,0,2,12,8,3,3,3)],V,[],A)";
         Query q     = new Query(pl);
         flag = q.hasSolution() ? true : false ;
         if(flag){
