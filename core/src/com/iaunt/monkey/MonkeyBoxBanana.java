@@ -10,8 +10,9 @@ public class MonkeyBoxBanana extends Game {
 	@Override
 	public void create() {
 		manager = new AssetManager();
-		manager.load("monkey.png", Texture.class);
+		//manager.load("monkey.png", Texture.class);
 		manager.load("monkey1.png", Texture.class);
+		//manager.load("monkey_climb", Texture.class);
 		manager.load("box.png", Texture.class);
 		manager.load("floor.png", Texture.class);
 		manager.load("banana.png", Texture.class);

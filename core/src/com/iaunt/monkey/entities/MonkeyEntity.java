@@ -32,16 +32,19 @@ public class MonkeyEntity extends Actor {
 
     private Animation<TextureRegion> walkAnimationRight;
     private Animation<TextureRegion> walkAnimationLeft;
+    private Animation<TextureRegion> climbAnimation;
 
-    private enum State {STANDING, WALKING_RIGHT, WALKING_LEFT}
+    private enum State {STANDING, WALKING_RIGHT, WALKING_LEFT, CLIMB}
     private State currentState;
     private State previousState;
     private boolean jumping;
 
-    private float newPosition;
+    private float newPositionX;
+    private float newPositionY;
     private boolean withBox;
 
     private BoxEntity currentBox;
+    private BoxEntity climbBox;
 
     public MonkeyEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
@@ -51,15 +54,22 @@ public class MonkeyEntity extends Actor {
         standRegion = new TextureRegion(texture, 0, 0, 16, 24);
         Array<TextureRegion> walkingRegionsRight = new Array<TextureRegion>();
         Array<TextureRegion> walkingRegionsLeft = new Array<TextureRegion>();
+        Array<TextureRegion> climbRegions = new Array<TextureRegion>();
         for(int i = 2; i < 6; i++){
             walkingRegionsRight.add(new TextureRegion(texture, i*16, 0, 16, 24));
             walkingRegionsLeft.add(new TextureRegion(texture, i*16, 0, 16, 24));
             walkingRegionsLeft.get(i-2).flip(true, false);
         }
+
+        for(int i = 7; i < 9; i++)
+            climbRegions.add(new TextureRegion(texture, i*16, 0, 16, 24));
+
         walkAnimationRight = new Animation<TextureRegion>(0.1f, walkingRegionsRight);
         walkAnimationLeft = new Animation<TextureRegion>(0.1f, walkingRegionsLeft);
+        climbAnimation = new Animation<TextureRegion>(0.1f, climbRegions);
         walkingRegionsRight.clear();
         walkingRegionsLeft.clear();
+        climbRegions.clear();
 
         // set initial state:
         currentState = State.STANDING;
@@ -117,7 +127,7 @@ public class MonkeyEntity extends Actor {
                 previousState = State.WALKING_RIGHT;
                 stateTimer = 0;
             }
-            if(body.getPosition().x >= newPosition){
+            if(body.getPosition().x >= newPositionX){
                 currentState = State.STANDING;
             }
             float vY = body.getLinearVelocity().y;
@@ -130,12 +140,26 @@ public class MonkeyEntity extends Actor {
                 previousState = State.WALKING_LEFT;
                 stateTimer = 0;
             }
-            if(body.getPosition().x <= newPosition){
+            if(body.getPosition().x <= newPositionX){
                 currentState = State.STANDING;
             }
             float vY = body.getLinearVelocity().y;
             body.setLinearVelocity(-PLAYER_SPEED, vY);
             currentRegion = walkAnimationLeft.getKeyFrame(stateTimer, true);
+        }
+        if(currentState == State.CLIMB){
+            // start climb:
+            if(previousState != State.CLIMB){
+                previousState = State.CLIMB;
+                stateTimer = 0;
+            }
+            if(body.getPosition().y >= newPositionY){
+                currentState = State.STANDING;
+                climbBox.getBody().getFixtureList().get(0).setSensor(false);
+            }
+            float vY = body.getLinearVelocity().x;
+            body.setLinearVelocity(vY, PLAYER_SPEED);
+            currentRegion = climbAnimation.getKeyFrame(stateTimer, true);
         }
 
         if(withBox){
@@ -167,12 +191,18 @@ public class MonkeyEntity extends Actor {
 
     public void walkRigth(){
         currentState = State.WALKING_RIGHT;
-        newPosition = body.getPosition().x + 1f;
+        newPositionX = body.getPosition().x + 1f;
     }
 
     public void walkLeft(){
         currentState = State.WALKING_LEFT;
-        newPosition = body.getPosition().x - 1f;
+        newPositionX = body.getPosition().x - 1f;
+    }
+
+    public void climb(BoxEntity box){
+        currentState = State.CLIMB;
+        newPositionY = body.getPosition().y + 1f;
+        climbBox = box;
     }
 
     public void upBox(BoxEntity box) {
