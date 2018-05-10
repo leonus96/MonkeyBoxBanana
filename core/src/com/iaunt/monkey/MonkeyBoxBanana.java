@@ -18,6 +18,7 @@ public class MonkeyBoxBanana extends Game {
 		manager.load("banana.png", Texture.class);
 		manager.finishLoading();
 
+		//prolog
 		setScreen(new GameScreen(this));
 	}
 

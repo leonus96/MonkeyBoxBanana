@@ -46,6 +46,8 @@ public class MonkeyEntity extends Actor {
     private BoxEntity currentBox;
     private BoxEntity climbBox;
 
+    private boolean busy;
+
     public MonkeyEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
         this.texture = texture;
@@ -92,6 +94,8 @@ public class MonkeyEntity extends Actor {
         fixture.setUserData("monkey");
         shape.dispose();
 
+        busy = false;
+
         setSize(PIXELS_IN_METERS * 1f, PIXELS_IN_METERS * 2f);
     }
 
@@ -134,6 +138,8 @@ public class MonkeyEntity extends Actor {
 
             if(body.getPosition().x >= newPositionX){
                 currentState = State.STANDING;
+                busy = false;
+
             }
         }
         if(currentState == State.WALKING_LEFT){
@@ -149,6 +155,7 @@ public class MonkeyEntity extends Actor {
 
             if(body.getPosition().x <= newPositionX){
                 currentState = State.STANDING;
+                busy = false;
             }
         }
         if(currentState == State.CLIMB){
@@ -164,6 +171,7 @@ public class MonkeyEntity extends Actor {
             if(body.getPosition().y >= newPositionY){
                 currentState = State.STANDING;
                 climbBox.getBody().getFixtureList().get(0).setSensor(false);
+                busy = false;
             }
 
         }
@@ -227,6 +235,7 @@ public class MonkeyEntity extends Actor {
                 break;
             }
         }
+        busy = false;
 
     }
 
@@ -251,11 +260,20 @@ public class MonkeyEntity extends Actor {
                 withBox = false;
             }
         }
+        busy = false;
 
     }
 
     public boolean isJumping() {
         return jumping;
+    }
+
+    public boolean isBusy() {
+        return busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
     }
 
     public void detach() {

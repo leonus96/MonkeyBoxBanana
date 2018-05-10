@@ -33,6 +33,8 @@ public class GameScreen extends BaseScreen {
     private Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
 
+    private int actionsCounter;
+
     public GameScreen(MonkeyBoxBanana game) {
         super(game);
         stage = new Stage();
@@ -71,16 +73,12 @@ public class GameScreen extends BaseScreen {
             }
         });
 
-
-
-
-
+        actionsCounter = 0;
     }
 
     @Override
     public void show() {
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
-        System.out.println(Gdx.graphics.getWidth() );
         monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(6.5f, 2));
         boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(1.5f, 1.5f), "box1"));
         boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(11.5f, 1.5f), "box2"));
@@ -91,6 +89,9 @@ public class GameScreen extends BaseScreen {
         stage.addActor(boxes.get(0));
         stage.addActor(boxes.get(1));
         stage.addActor(banana);
+
+        HandlerProlog.startActions();
+
     }
 
     @Override
@@ -116,8 +117,41 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClearColor(0f, 170f/255f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
-            monkey.walkRigth();
+        if(!monkey.isBusy()){
+            switch (HandlerProlog.actions.charAt(actionsCounter)){
+                case 'a' :
+                case 'e' :
+                case 'g' :
+                            monkey.setBusy(true);
+                            monkey.walkRigth();
+                            break;
+                case 'b' :
+                case 'f' :
+                case 'h' :  monkey.setBusy(true);
+                            monkey.walkLeft();
+                            break;
+                case 'c' :
+                case 'd' :
+                            monkey.setBusy(true);
+                            monkey.upBox(boxes);
+                            break;
+                case 'i' :
+                case 'j' :
+                case 'k' :
+                case 'l' :
+                            monkey.setBusy(true);
+                            monkey.downBox(boxes);
+                            break;
+                case 'm' :
+                case 'n' :
+                            monkey.setBusy(true);
+                            monkey.climb(boxes);
+                            break;
+            }
+        }
+
+        /*if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             monkey.walkLeft();
@@ -130,7 +164,7 @@ public class GameScreen extends BaseScreen {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
             monkey.climb(boxes);
-        }
+        }*/
 
         stage.act();
 
