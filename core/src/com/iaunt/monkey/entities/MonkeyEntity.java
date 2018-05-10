@@ -99,10 +99,10 @@ public class MonkeyEntity extends Actor {
     public void act(float delta) {
         stateTimer += delta;
 
-        /*if (Gdx.input.isKeyJustPressed(Input.Keys.UP))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
             jump();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+        /*if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
             currentState = State.WALKING_RIGHT;
         }
          else if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
@@ -127,12 +127,14 @@ public class MonkeyEntity extends Actor {
                 previousState = State.WALKING_RIGHT;
                 stateTimer = 0;
             }
-            if(body.getPosition().x >= newPositionX){
-                currentState = State.STANDING;
-            }
+
             float vY = body.getLinearVelocity().y;
             body.setLinearVelocity(PLAYER_SPEED, vY);
             currentRegion = walkAnimationRight.getKeyFrame(stateTimer, true);
+
+            if(body.getPosition().x >= newPositionX){
+                currentState = State.STANDING;
+            }
         }
         if(currentState == State.WALKING_LEFT){
             // start walking:
@@ -140,12 +142,14 @@ public class MonkeyEntity extends Actor {
                 previousState = State.WALKING_LEFT;
                 stateTimer = 0;
             }
-            if(body.getPosition().x <= newPositionX){
-                currentState = State.STANDING;
-            }
+
             float vY = body.getLinearVelocity().y;
             body.setLinearVelocity(-PLAYER_SPEED, vY);
             currentRegion = walkAnimationLeft.getKeyFrame(stateTimer, true);
+
+            if(body.getPosition().x <= newPositionX){
+                currentState = State.STANDING;
+            }
         }
         if(currentState == State.CLIMB){
             // start climb:
@@ -153,13 +157,15 @@ public class MonkeyEntity extends Actor {
                 previousState = State.CLIMB;
                 stateTimer = 0;
             }
+            float vY = body.getLinearVelocity().x;
+            body.setLinearVelocity(vY, PLAYER_SPEED);
+            currentRegion = climbAnimation.getKeyFrame(stateTimer, true);
+
             if(body.getPosition().y >= newPositionY){
                 currentState = State.STANDING;
                 climbBox.getBody().getFixtureList().get(0).setSensor(false);
             }
-            float vY = body.getLinearVelocity().x;
-            body.setLinearVelocity(vY, PLAYER_SPEED);
-            currentRegion = climbAnimation.getKeyFrame(stateTimer, true);
+
         }
 
         if(withBox){
@@ -199,20 +205,53 @@ public class MonkeyEntity extends Actor {
         newPositionX = body.getPosition().x - 1f;
     }
 
-    public void climb(BoxEntity box){
-        currentState = State.CLIMB;
-        newPositionY = body.getPosition().y + 1f;
-        climbBox = box;
+    public void climb(Array<BoxEntity> boxes) {
+        for (int i = 0; i < boxes.size; i++) {
+            System.out.println("caja " + i + ": " + boxes.get(i).getBody().getPosition().y);
+            System.out.println("body: "  + body.getPosition().y);
+            if ((boxes.get(i).getBody().getPosition().y < body.getPosition().y)
+                    && (Math.abs(boxes.get(i).getBody().getPosition().x - body.getPosition().x) < 0.5f)) {
+                currentState = State.CLIMB;
+                newPositionY = body.getPosition().y + 1f;
+                climbBox = boxes.get(i);
+                break;
+            }
+        }
     }
 
-    public void upBox(BoxEntity box) {
-        currentBox = box;
-        withBox = true;
+    public void upBox(Array<BoxEntity> boxes) {
+        for(int i = 0; i < boxes.size; i++) {
+            if (Math.abs(boxes.get(i).getBody().getPosition().x - body.getPosition().x) < 0.5f){
+                currentBox = boxes.get(i);
+                withBox = true;
+                break;
+            }
+        }
+
     }
 
-    public void downBox(BoxEntity box) {
-        box.getBody().setTransform(box.getBody().getPosition().x, 1.5f, box.getBody().getAngle());
-        withBox = false;
+    public void downBox(Array<BoxEntity> boxes) {
+        float newpositionY = 1.5f;
+        for(int i = 0; i < boxes.size; i++) {
+            for(int j = 0; j < boxes.size; j++) {
+                System.out.println("fixtureA " + boxes.get(i).getBody().getFixtureList().get(0).getUserData());
+                System.out.println("fixtureB " + boxes.get(j).getBody().getFixtureList().get(0).getUserData());
+                if(boxes.get(i).getBody().getFixtureList().get(0).getUserData()
+                        !=
+                    boxes.get(j).getBody().getFixtureList().get(0).getUserData()){
+                    if(Math.abs(boxes.get(i).getBody().getPosition().x - boxes.get(j).getBody().getPosition().x) < 0.5f) {
+                        newpositionY = newpositionY + 1f;
+                    }
+                }
+            }
+            if(boxes.get(i).getBody().getFixtureList().get(0).getUserData()
+                    ==
+                currentBox.getBody().getFixtureList().get(0).getUserData()){
+                boxes.get(i).getBody().setTransform(boxes.get(i).getBody().getPosition().x, newpositionY, boxes.get(i).getBody().getAngle());
+                withBox = false;
+            }
+        }
+
     }
 
     public boolean isJumping() {

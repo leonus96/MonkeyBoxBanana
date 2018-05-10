@@ -19,7 +19,7 @@ public class BoxEntity extends Actor {
     private Body body;
     private Fixture fixture;
 
-    public BoxEntity(World world, Texture texture, Vector2 position) {
+    public BoxEntity(World world, Texture texture, Vector2 position, String userData) {
         this.world = world;
         this.texture = texture;
 
@@ -34,7 +34,7 @@ public class BoxEntity extends Actor {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(0.5f, 0.5f);
         fixture = body.createFixture(shape, 1);
-        fixture.setUserData("box");
+        fixture.setUserData(userData);
         fixture.setSensor(true);
         shape.dispose();
 

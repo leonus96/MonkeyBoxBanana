@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.iaunt.monkey.entities.BananaEntity;
 import com.iaunt.monkey.entities.BoxEntity;
 import com.iaunt.monkey.entities.FloorEntity;
@@ -26,8 +27,7 @@ public class GameScreen extends BaseScreen {
     private World world;
     private FloorEntity floor;
     private MonkeyEntity monkey;
-    private BoxEntity box1;
-    private BoxEntity box2;
+    private Array<BoxEntity> boxes = new Array<BoxEntity>();
     private BananaEntity banana;
 
     private Box2DDebugRenderer debugRenderer;
@@ -82,14 +82,14 @@ public class GameScreen extends BaseScreen {
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
         System.out.println(Gdx.graphics.getWidth() );
         monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(6.5f, 2));
-        box1 = new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(1.5f, 1.5f));
-        box2 = new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(11.5f, 1.5f));
+        boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(1.5f, 1.5f), "box1"));
+        boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(11.5f, 1.5f), "box2"));
         banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(6.5f, 8));
 
         stage.addActor(floor);
         stage.addActor(monkey);
-        stage.addActor(box1);
-        stage.addActor(box2);
+        stage.addActor(boxes.get(0));
+        stage.addActor(boxes.get(1));
         stage.addActor(banana);
     }
 
@@ -98,11 +98,11 @@ public class GameScreen extends BaseScreen {
         monkey.detach();
         monkey.remove();
 
-        box1.detach();
-        box1.remove();
+        boxes.get(0).detach();
+        boxes.get(0).remove();
 
-        box2.detach();
-        box2.remove();
+        boxes.get(1).detach();
+        boxes.get(1).remove();
 
         floor.detach();
         floor.remove();
@@ -122,14 +122,14 @@ public class GameScreen extends BaseScreen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             monkey.walkLeft();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            monkey.upBox(box1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            monkey.upBox(boxes);
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            monkey.downBox(box1);
+            monkey.downBox(boxes);
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            monkey.climb(box1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.C)) {
+            monkey.climb(boxes);
         }
 
         stage.act();
