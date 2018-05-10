@@ -31,6 +31,7 @@ public class BananaEntity extends Actor {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(0.5f, 0.5f);
         fixture = body.createFixture(shape, 1);
+        fixture.setUserData("banana");
 
         setSize(PIXELS_IN_METERS * 1f, PIXELS_IN_METERS * 1f);
     }

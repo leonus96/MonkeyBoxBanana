@@ -192,7 +192,7 @@ public class MonkeyEntity extends Actor {
         batch.draw(currentRegion, getX(), getY(), getWidth(), getHeight());
     }
 
-    private void jump(){
+    public void jump(){
         if(!jumping) {
             jumping = true;
             body.applyLinearImpulse(0, IMPULSE_JUMP, body.getPosition().x, body.getPosition().y, true);
@@ -215,8 +215,6 @@ public class MonkeyEntity extends Actor {
 
     public void climb(Array<BoxEntity> boxes) {
         for (int i = 0; i < boxes.size; i++) {
-            System.out.println("caja " + i + ": " + boxes.get(i).getBody().getPosition().y);
-            System.out.println("body: "  + body.getPosition().y);
             if ((boxes.get(i).getBody().getPosition().y < body.getPosition().y)
                     && (Math.abs(boxes.get(i).getBody().getPosition().x - body.getPosition().x) < 0.5f)) {
                 currentState = State.CLIMB;
@@ -243,8 +241,6 @@ public class MonkeyEntity extends Actor {
         float newpositionY = 1.5f;
         for(int i = 0; i < boxes.size; i++) {
             for(int j = 0; j < boxes.size; j++) {
-                System.out.println("fixtureA " + boxes.get(i).getBody().getFixtureList().get(0).getUserData());
-                System.out.println("fixtureB " + boxes.get(j).getBody().getFixtureList().get(0).getUserData());
                 if(boxes.get(i).getBody().getFixtureList().get(0).getUserData()
                         !=
                     boxes.get(j).getBody().getFixtureList().get(0).getUserData()){

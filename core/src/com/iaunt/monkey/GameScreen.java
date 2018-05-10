@@ -30,9 +30,6 @@ public class GameScreen extends BaseScreen {
     private Array<BoxEntity> boxes = new Array<BoxEntity>();
     private BananaEntity banana;
 
-    private Box2DDebugRenderer debugRenderer;
-    OrthographicCamera camera;
-
     private int actionsCounter;
 
     public GameScreen(MonkeyBoxBanana game) {
@@ -40,20 +37,20 @@ public class GameScreen extends BaseScreen {
         stage = new Stage();
         world = new World(new Vector2(0, -10), true);
 
-        debugRenderer =  new Box2DDebugRenderer();
-        camera = new OrthographicCamera(16, 9);
-        camera.translate(6,0);
-
         world.setContactListener(new ContactListener() {
             private boolean areCollided(Contact contact, Object userA, Object userB){
                 return (contact.getFixtureA().getUserData().equals(userA) && contact.getFixtureB().getUserData().equals(userB)) ||
                         (contact.getFixtureA().getUserData().equals(userB) && contact.getFixtureB().getUserData().equals(userA));
             }
 
+
             @Override
             public void beginContact(Contact contact) {
                 if (areCollided(contact, "monkey", "floor")) {
                     monkey.setJumping(false);
+                }
+                if (areCollided(contact, "banana", "monkey")) {
+                    System.out.println("Provecho! :D");
                 }
             }
 
@@ -78,17 +75,29 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void show() {
+
+        HandlerProlog.setPc1("4");
+        HandlerProlog.setPc2("1");
+        HandlerProlog.setPm("12");
+
+        floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
+        monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(Integer.parseInt(HandlerProlog.getPm())-0.5f, 2));
+        boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(Integer.parseInt(HandlerProlog.getPc1())-0.5f, 1.5f), "box1"));
+        boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(Integer.parseInt(HandlerProlog.getPc2())-0.5f, 1.5f), "box2"));
+        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(7.5f, 8));
+        /*
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
         monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(6.5f, 2));
         boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(1.5f, 1.5f), "box1"));
         boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(11.5f, 1.5f), "box2"));
-        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(6.5f, 8));
-
+        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(7.5f, 8));
+        */
         stage.addActor(floor);
         stage.addActor(monkey);
         stage.addActor(boxes.get(0));
         stage.addActor(boxes.get(1));
         stage.addActor(banana);
+
 
         HandlerProlog.startActions();
 
@@ -118,36 +127,49 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if(!monkey.isBusy()){
-            switch (HandlerProlog.actions.charAt(actionsCounter)){
-                case 'a' :
-                case 'e' :
-                case 'g' :
-                            monkey.setBusy(true);
-                            monkey.walkRigth();
-                            break;
-                case 'b' :
-                case 'f' :
-                case 'h' :  monkey.setBusy(true);
-                            monkey.walkLeft();
-                            break;
-                case 'c' :
-                case 'd' :
-                            monkey.setBusy(true);
-                            monkey.upBox(boxes);
-                            break;
-                case 'i' :
-                case 'j' :
-                case 'k' :
-                case 'l' :
-                            monkey.setBusy(true);
-                            monkey.downBox(boxes);
-                            break;
-                case 'm' :
-                case 'n' :
-                            monkey.setBusy(true);
-                            monkey.climb(boxes);
-                            break;
+            if(actionsCounter < HandlerProlog.actions.length()){
+                switch (HandlerProlog.actions.charAt(actionsCounter)){
+                    case 'a' :
+                    case 'e' :
+                    case 'g' :
+                        monkey.setBusy(true);
+                        monkey.walkRigth();
+                        actionsCounter++;
+                        break;
+                    case 'b' :
+                    case 'f' :
+                    case 'h' :  monkey.setBusy(true);
+                        monkey.walkLeft();
+                        actionsCounter++;
+                        break;
+
+                    case 'c' :
+                    case 'd' :
+                        monkey.setBusy(true);
+                        monkey.upBox(boxes);
+                        actionsCounter++;
+                        break;
+                    case 'i' :
+                    case 'j' :
+                    case 'k' :
+                    case 'l' :
+                        monkey.setBusy(true);
+                        monkey.downBox(boxes);
+                        actionsCounter++;
+                        break;
+                    case 'm' :
+                    case 'n' :
+                        monkey.setBusy(true);
+                        monkey.climb(boxes);
+                        actionsCounter++;
+                        break;
+                }
+            } else {
+                monkey.setJumping(false);
+                monkey.jump();
             }
+
+
         }
 
         /*if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
@@ -169,8 +191,7 @@ public class GameScreen extends BaseScreen {
         stage.act();
 
         world.step(delta, 6, 2);
-        camera.update();
-        debugRenderer.render(world, camera.combined);
+
         stage.draw();
     }
 
