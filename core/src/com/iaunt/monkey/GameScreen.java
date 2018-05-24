@@ -79,12 +79,13 @@ public class GameScreen extends BaseScreen {
         HandlerProlog.setPc1("4");
         HandlerProlog.setPc2("1");
         HandlerProlog.setPm("12");
+        HandlerProlog.setPb("2");
 
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
         monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(Integer.parseInt(HandlerProlog.getPm())-0.5f, 2));
         boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(Integer.parseInt(HandlerProlog.getPc1())-0.5f, 1.5f), "box1"));
         boxes.add(new BoxEntity(world, (Texture) game.getManager().get("box.png"), new Vector2(Integer.parseInt(HandlerProlog.getPc2())-0.5f, 1.5f), "box2"));
-        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(7.5f, 8));
+        banana = new BananaEntity(world, (Texture) game.getManager().get("banana.png"), new Vector2(Integer.parseInt(HandlerProlog.getPb())-0.5f, 8));
         /*
         floor = new FloorEntity(world, (Texture) game.getManager().get("floor.png"), 0f, Gdx.graphics.getWidth() / PIXELS_IN_METERS, 1f);
         monkey = new MonkeyEntity(world, (Texture) game.getManager().get("monkey1.png"), new Vector2(6.5f, 2));

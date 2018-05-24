@@ -10,9 +10,10 @@ solucion(A,V):- sgte(e(7,0,2,12,8,3,3,3),[e(7,0,2,12,8,3,3,3)],V,[],A).
 pertenece(H,[H|_]).
 pertenece(H,[_|R]):- pertenece(H,R).
 
-
-sgte(e(8,0,8,8,8,6,3,9),L,L,A,A).
-sgte(e(8,0,8,8,8,3,6,9),L,L,A,A).
+sgte(e(B,0,B,B,B,6,3,9),L,L,A,A).
+sgte(e(B,0,B,B,B,3,6,9),L,L,A,A).
+%sgte(e(8,0,8,8,8,6,3,9),L,L,A,A).
+%sgte(e(8,0,8,8,8,3,6,9),L,L,A,A).
 
 sgte(e(Pm,E,Pc1,Pc2,Pb,Hc1,Hc2,Hm),Le,L,La,A):- accion(e(Pm,E,Pc1,Pc2,Pb,Hc1,Hc2,Hm),e(Pms,Es,Pc1s,Pc2s,Pbs,Hc1s,Hc2s,Hms),Acc),
 	                      not(pertenece(e(Pms,Es,Pc1s,Pc2s,Pbs,Hc1s,Hc2s,Hms),Le)),
