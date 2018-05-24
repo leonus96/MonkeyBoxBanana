@@ -16,13 +16,20 @@ public class HandlerProlog {
     private static String pm  = "7";
     private static String pc1 = "2";
     private static String pc2 = "12";
+    private static String pb = "8";
 
 
     private static int xpm;
     private static int xpc1;
     private static int xpc2 ;
 
+    public static String getPb(){
+        return pb;
+    }
 
+    public static void setPb(String pb_){
+        pb = pb_;
+    }
 
     public static String getPm(){
         return pm;
@@ -45,7 +52,6 @@ public class HandlerProlog {
     public static void setPc2(String pc2_){
         pc2 = pc2_;
     }
-
 
 
 
@@ -121,7 +127,7 @@ public class HandlerProlog {
 
         String pl   = "consult('MonkeyBoxBanana.pl')";
         //String cons = "solucion(A,V)";
-        String cons ="sgte(e("+pm+",0,"+pc1+","+pc2+",8,3,3,3),[e("+pm+",0,"+pc1+","+pc2+",8,3,3,3)],V,[],A)";
+        String cons ="sgte(e("+pm+",0,"+pc1+","+pc2+","+pb+",3,3,3),[e("+pm+",0,"+pc1+","+pc2+","+pb+",3,3,3)],V,[],A)";
         System.out.println(cons);
         Query q     = new Query(pl);
         flag = q.hasSolution() ? true : false ;
